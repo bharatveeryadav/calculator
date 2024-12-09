@@ -9,7 +9,7 @@
    const __dirname = path.dirname(__filename);
 
    const app = express();
-   const port = 4000;
+   const port = 5000;
 
    app.set('view engine', 'ejs');
    app.use(express.urlencoded({ extended: true }));
@@ -49,17 +49,17 @@
    });
 
    app.post('/screenshot', async (req, res) => {
-       const html = req.body.html;
-       if (!html) {
-           return res.status(400).send('No HTML content provided');
-       }
-       const browser = await puppeteer.launch();
-       const page = await browser.newPage();
-       await page.setContent(html);
-       await page.screenshot({ path: './public/screenshot.png' });
-       await browser.close();
-       res.sendFile(path.resolve(__dirname, 'public/screenshot.png'));
-   });
+    const html = req.body.html;
+    if (!html) {
+        return res.status(400).send('No HTML content provided');
+    }
+    const browser = await puppeteer.launch({ headless: true }); // Ensure headless mode
+    const page = await browser.newPage();
+    await page.setContent(html);
+    await page.screenshot({ path: './public/screenshot.png' });
+    await browser.close();
+    res.sendFile(path.resolve(__dirname, 'public/screenshot.png'));
+});
 
    app.listen(port, () => {
        console.log(`Server running at http://localhost:${port}`);
