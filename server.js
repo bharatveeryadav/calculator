@@ -9,7 +9,7 @@
    const __dirname = path.dirname(__filename);
 
    const app = express();
-   const port = 5000;
+   const port = 8000;
 
    app.set('view engine', 'ejs');
    app.use(express.urlencoded({ extended: true }));
@@ -53,7 +53,10 @@
     if (!html) {
         return res.status(400).send('No HTML content provided');
     }
-    const browser = await puppeteer.launch({ headless: true }); // Ensure headless mode
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Add these flags
+    });
     const page = await browser.newPage();
     await page.setContent(html);
     await page.screenshot({ path: './public/screenshot.png' });
